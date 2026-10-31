@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VTA · Analytics</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/instructor.css') }}" />
+</head>
+<body>
+
+<!-- ░░ TOP BAR ░░ -->
+<header class="top-bar">
+  <div class="top-bar-left">
+    <a href="#" class="back-link" id="backLink">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      Back to course
+    </a>
+    <span class="top-bar-sep">/</span>
+    <span class="top-bar-course-name">
+      Analytics <span class="top-bar-sep">·</span> <span id="analyticsCourseCode">---</span>
+    </span>
+  </div>
+  <div class="top-bar-right">
+    <span class="welcome-text">Welcome, <span class="accent" id="teacherNameDisplay">Teacher</span></span>
+    <a href="#" class="btn-term btn-term-outline">Log out</a>
+  </div>
+</header>
+
+<!-- ░░ ANALYTICS PAGE WRAPPER ░░ -->
+<div class="analytics-page">
+
+  <!-- ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝
+       SECTION 1 — COURSE OVERVIEW BAR (full width)
+  ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝ -->
+  <div class="analytics-overview">
+    <div class="overview-bar">
+      <span class="overview-item overview-course" id="overviewCourse">---</span>
+      <span class="overview-divider">|</span>
+      <span class="overview-item"><span class="overview-val" id="overviewStudents">0</span> students</span>
+      <span class="overview-divider">|</span>
+      <span class="overview-item"><span class="overview-val" id="overviewDocs">0</span> documents</span>
+      <span class="overview-divider">|</span>
+      <span class="overview-item"><span class="overview-val" id="overviewQueries">0</span> queries</span>
+      <span class="overview-divider">|</span>
+      <span class="overview-item overview-range" id="overviewRange">Loading...</span>
+    </div>
+  </div>
+
+  <!-- ╝╝ TWO-COLUMN GRID ╝╝ -->
+  <div class="analytics-col-left">
+
+    <!-- ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝
+         SECTION 2 — CONFUSION HEATMAP
+    ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝ -->
+    <div class="an-block" id="heatmapBlock">
+      <div class="an-block-header">
+        Top confusing topics
+        <span class="an-block-meta">sorted by frequency</span>
+      </div>
+      <div class="an-block-body">
+
+        <div class="term-table-wrap" style="margin-bottom:1.25rem;">
+          <table class="term-table" id="heatmapTable">
+            <thead>
+              <tr>
+                <th>topic</th>
+                <th>questions</th>
+                <th>difficulty</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- rows injected by JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="chart-label">
+          Topic frequency
+        </div>
+        <div class="chart-wrap chart-wrap-md">
+          <canvas id="topicChart"></canvas>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝
+         SECTION 4 — MODULE BREAKDOWN
+    ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝ -->
+    <div class="an-block" id="moduleBlock">
+      <div class="an-block-header">
+        Module breakdown
+        <span class="an-block-meta">by engagement &amp; difficulty</span>
+      </div>
+      <div class="an-block-body an-block-body-split">
+
+        <div class="module-table-wrap">
+          <div class="term-table-wrap" style="margin-bottom:0;">
+            <table class="term-table">
+              <thead>
+                <tr>
+                  <th>module</th>
+                  <th>queries</th>
+                  <th>avg diff</th>
+                  <th>most confused concept</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- rows injected by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="module-chart-wrap">
+          <div class="chart-label">
+            Query distribution
+          </div>
+          <div class="chart-wrap chart-wrap-donut">
+            <canvas id="moduleChart"></canvas>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝
+         SECTION 5 — QUERY EXPLORER
+    ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝ -->
+    <div class="an-block" id="queryBlock">
+      <div class="an-block-header query-explorer-header">
+        <div>
+          <span id="queryHeaderText">Recent queries</span>
+        </div>
+        <button class="btn-term btn-term-outline btn-sm-term" id="clearFilterBtn" style="display:none;">
+          Clear filter
+        </button>
+      </div>
+      <div class="an-block-body" style="padding:0;">
+
+        <div class="query-list" id="queryList">
+          <!-- Rows injected by JS -->
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /col-left -->
+
+  <div class="analytics-col-right">
+
+    <!-- ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝
+         SECTION 3 — ENGAGEMENT STATS + TRENDS
+    ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝ -->
+    <div class="an-block" id="statsBlock">
+      <div class="an-block-header">
+        Engagement stats
+      </div>
+      <div class="an-block-body">
+
+        <!-- 2×2 stat grid -->
+        <div class="stat-grid">
+          <div class="stat-box">
+            <div class="stat-box-label">total queries</div>
+            <div class="stat-box-value" id="statTotalQueries">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-box-label">active students</div>
+            <div class="stat-box-value" id="statActiveStudents">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-box-label">avg confidence</div>
+            <div class="stat-box-value" id="statAvgConfidence">0</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-box-label">docs uploaded</div>
+            <div class="stat-box-value" id="statDocsUploaded">0</div>
+          </div>
+        </div>
+
+        <!-- Trend chart -->
+        <div class="chart-label" style="margin-top:1.25rem;">
+          Engagement trend
+        </div>
+        <div class="chart-wrap chart-wrap-sm">
+          <canvas id="trendChart"></canvas>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝
+         SECTION 6 — AT-RISK STUDENTS
+    ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝ -->
+    <div class="an-block" id="atRiskBlock">
+      <div class="an-block-header">
+        At-risk detection
+      </div>
+      <div class="an-block-body">
+
+        <div class="an-comment">Based on interaction patterns — not personal identifiers</div>
+
+        <ul class="risk-list" id="atRiskList">
+          <li class="risk-item text-muted">No at-risk students detected.</li>
+        </ul>
+
+        <div class="an-comment an-comment-footer">Phase 2 — predictive model integration pending</div>
+
+      </div>
+    </div>
+
+    <!-- ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝
+         SECTION 7 — FIGURE CONFUSION REPORT
+    ╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝╝ -->
+    <div class="an-block" id="figureBlock">
+      <div class="an-block-header">
+        Figure confusion report
+      </div>
+      <div class="an-block-body">
+
+        <ul class="figure-list" id="figureList">
+          <li class="figure-item text-muted">No figure data.</li>
+        </ul>
+
+        <div class="an-comment an-comment-footer">Figures referenced most in student queries</div>
+
+      </div>
+    </div>
+
+  </div><!-- /col-right -->
+
+</div><!-- /analytics-page -->
+
+
+<!-- ─────────────────────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+'use strict';
+
+/* ── LIVE DATA FROM API ─────────────────────────────────────────────────────── */
+// Get course ID from URL or use default
+const courseId = window.location.pathname.split('/').pop() || 'cpts451';
+
+// Global data holders
+let LIVE_ANALYTICS = null;
+let LIVE_QUERIES = [];
+
+/* ── Fetch analytics from API ───────────────────────────────────── */
+async function fetchAnalytics() {
+  try {
+    const response = await fetch(`/api/analytics/${courseId}`);
+    if (response.ok) {
+      LIVE_ANALYTICS = await response.json();
+      updateOverviewBar();
+      updateHeatmap();
+      updateEngagementChart();
+      updateStats();
+      updateAtRisk();
+      console.log('Live analytics loaded:', LIVE_ANALYTICS);
+    } else {
+      console.warn('Analytics API returned', response.status);
+    }
+  } catch (err) {
+    console.error('Failed to fetch analytics:', err);
+  }
+}
+
+/* ── Fetch queries from API ──────────────────────────────────────── */
+async function fetchQueries() {
+  try {
+    const response = await fetch(`/api/analytics/${courseId}/queries`);
+    if (response.ok) {
+      const data = await response.json();
+      LIVE_QUERIES = data.queries || [];
+      renderQueries(null);
+      console.log('Live queries loaded:', LIVE_QUERIES.length);
+    }
+  } catch (err) {
+    console.error('Failed to fetch queries:', err);
+  }
+}
+
+/* ── Update overview bar with live data ─────────────────────── */
+function updateOverviewBar() {
+  if (!LIVE_ANALYTICS) return;
+  
+  const overviewBar = document.querySelector('.overview-bar');
+  if (!overviewBar) return;
+  
+  overviewBar.innerHTML = `
+    <span class="overview-item overview-course">${courseId.toUpperCase()}</span>
+    <span class="overview-divider">|</span>
+    <span class="overview-item"><span class="overview-val">${LIVE_ANALYTICS.active_students || 0}</span> students</span>
+    <span class="overview-divider">|</span>
+    <span class="overview-item"><span class="overview-val">${LIVE_ANALYTICS.docs_uploaded || 0}</span> documents</span>
+    <span class="overview-divider">|</span>
+    <span class="overview-item"><span class="overview-val">${LIVE_ANALYTICS.total_queries || 0}</span> queries</span>
+    <span class="overview-divider">|</span>
+    <span class="overview-item overview-range">Last 7 days</span>
+  `;
+}
+
+/* ── Update heatmap with live data ──────────────────────────────────────── */
+function updateHeatmap() {
+  if (!LIVE_ANALYTICS || !LIVE_ANALYTICS.confusing_topics) return;
+  
+  const heatmapTable = document.getElementById('heatmapTable');
+  if (!heatmapTable) return;
+  
+  const tbody = heatmapTable.querySelector('tbody');
+  if (!tbody) return;
+  
+  tbody.innerHTML = LIVE_ANALYTICS.confusing_topics.map(topic => `
+    <tr class="heatmap-row" data-topic="${topic.topic}">
+      <td class="topic-name-cell">${topic.topic}</td>
+      <td class="q-count-cell">${topic.count}</td>
+      <td><span class="diff-badge diff-${topic.difficulty.toLowerCase()}">${topic.difficulty}</span></td>
+    </tr>
+  `).join('');
+
+  // Re-attach click handlers
+  attachHeatmapHandlers();
+
+  // Mirror the same data into the topic frequency chart
+  const topicChart = Chart.getChart(document.getElementById('topicChart'));
+  if (topicChart) {
+    topicChart.data.labels = LIVE_ANALYTICS.confusing_topics.map(topic => topic.topic);
+    topicChart.data.datasets[0].data = LIVE_ANALYTICS.confusing_topics.map(topic => topic.count);
+    topicChart.update();
+  }
+}
+
+/* ── Update engagement chart with live data ───────────────────── */
+function updateStats() {
+  if (!LIVE_ANALYTICS) return;
+  const a = LIVE_ANALYTICS;
+  const tq = document.getElementById('statTotalQueries');
+  const as = document.getElementById('statActiveStudents');
+  const ac = document.getElementById('statAvgConfidence');
+  const du = document.getElementById('statDocsUploaded');
+  if (tq) tq.textContent = a.total_queries || 0;
+  if (as) as.textContent = a.active_students || 0;
+  if (ac) ac.textContent = (a.avg_confidence != null) ? a.avg_confidence : 0;
+  if (du) du.textContent = a.docs_uploaded || 0;
+}
+
+function updateAtRisk() {
+  if (!LIVE_ANALYTICS || !LIVE_ANALYTICS.at_risk_students) return;
+  const list = document.getElementById('atRiskList');
+  if (!list) return;
+  const items = LIVE_ANALYTICS.at_risk_students;
+  if (!items.length) {
+    list.innerHTML = '<li class="risk-item text-muted">No at-risk students detected.</li>';
+    return;
+  }
+  list.innerHTML = items.map(s => `
+    <li class="risk-item">
+      <div class="risk-top">
+        <span class="risk-id">STU_${String(s.student_id).slice(0,4).toUpperCase()}</span>
+        <span class="risk-badge risk-struggling">${s.reason || 'NEEDS_HELP'}</span>
+      </div>
+      <div class="risk-topics">${s.total_queries} queries, ${s.failed_queries} failed</div>
+    </li>
+  `).join('');
+}
+
+function updateEngagementChart() {
+  if (!LIVE_ANALYTICS || !LIVE_ANALYTICS.engagement_trend) return;
+
+  const chart = Chart.getChart(document.getElementById('trendChart'));
+  if (!chart) return;
+
+  const trend = LIVE_ANALYTICS.engagement_trend;
+  chart.data.labels = trend.map(d => d.date.slice(5)); // MM-DD
+  chart.data.datasets[0].data = trend.map(d => d.count);
+  chart.update();
+}
+
+/* ── Re-attach heatmap click handlers ─────────────────────────── */
+function attachHeatmapHandlers() {
+  document.querySelectorAll('.heatmap-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const topic = row.dataset.topic;
+      if (activeTopic === topic) {
+        clearFilter();
+        return;
+      }
+      activeTopic = topic;
+      document.querySelectorAll('.heatmap-row').forEach(r => r.classList.remove('heatmap-row-active'));
+      row.classList.add('heatmap-row-active');
+      document.getElementById('queryHeaderText').textContent = `Queries — ${topic}`;
+      document.getElementById('clearFilterBtn').style.display = 'inline-flex';
+      document.getElementById('queryBlock').scrollIntoView({ behavior:'smooth', block:'start' });
+      renderQueries(topic);
+    });
+  });
+}
+
+/* ── Shared chart defaults (tokens match instructor.css :root) ── */
+Chart.defaults.font.family = "'Inter', -apple-system, 'Segoe UI', sans-serif";
+Chart.defaults.font.size   = 11;
+Chart.defaults.color       = '#98a2b3';   /* --text-muted */
+
+const ACCENT      = '#2f6bed';            /* --accent        */
+const GRID_COLOR  = '#eef1f6';            /* --border-sub    */
+const TICK_COLOR  = '#98a2b3';            /* --text-muted    */
+const BORDER_COLOR= '#e4e8f0';            /* --border        */
+const ACCENT_FILL = 'rgba(47,107,237,0.10)';
+const TOOLTIP_BG  = '#101828';            /* --text-strong   */
+
+/* ── Chart 1: Topic frequency (horizontal bar) ────────────────── */
+new Chart(document.getElementById('topicChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Loading...'],
+    datasets: [{
+      data: [0],
+      backgroundColor: [
+        'rgba(47,107,237,0.28)',
+      ],
+      borderColor: ACCENT,
+      borderWidth: 1,
+      borderRadius: 6,
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      backgroundColor: TOOLTIP_BG,
+      borderColor: GRID_COLOR,
+      borderWidth: 1,
+      callbacks: { label: ctx => ` ${ctx.raw} questions` }
+    }},
+    scales: {
+      x: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR }, border: { color: BORDER_COLOR } },
+      y: { grid: { display: false },    ticks: { color: TICK_COLOR }, border: { color: BORDER_COLOR } }
+    }
+  }
+});
+
+/* ── Chart 2: Weekly engagement trend (line) ──────────────────── */
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: {
+    labels: [],
+    datasets: [{
+      label: 'queries',
+      data: [],
+      borderColor: ACCENT,
+      backgroundColor: ACCENT_FILL,
+      pointBackgroundColor: ACCENT,
+      pointRadius: 3,
+      pointHoverRadius: 5,
+      fill: true,
+      tension: 0.35,
+      borderWidth: 2.5,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: {
+      backgroundColor: TOOLTIP_BG,
+      borderColor: GRID_COLOR,
+      borderWidth: 1,
+    }},
+    scales: {
+      x: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR }, border: { color: BORDER_COLOR } },
+      y: { grid: { color: GRID_COLOR }, ticks: { color: TICK_COLOR }, border: { color: BORDER_COLOR } }
+    }
+  }
+});
+
+/* ── Chart 3: Module query distribution (doughnut) ────────────── */
+new Chart(document.getElementById('moduleChart'), {
+  type: 'doughnut',
+  data: {
+    labels: [],
+    datasets: [{
+      data: [],
+      backgroundColor: [],
+      borderColor: '#ffffff',
+      borderWidth: 2,
+      hoverOffset: 6,
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    cutout: '62%',
+    plugins: {
+      legend: {
+        position: 'bottom',
+        labels: { color: TICK_COLOR, boxWidth: 10, padding: 10, font: { size: 10 } }
+      },
+      tooltip: {
+        backgroundColor: TOOLTIP_BG,
+        borderColor: GRID_COLOR,
+        borderWidth: 1,
+        callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} queries` }
+      }
+    }
+  }
+});
+
+/* ── Render queries from LIVE data ────────────────────────────────────── */
+function renderQueries(filterTopic) {
+  const list = document.getElementById('queryList');
+  
+  // Use live data if available, otherwise show placeholder
+  const data = LIVE_QUERIES.length > 0 
+    ? (filterTopic ? LIVE_QUERIES.filter(q => q.topic === filterTopic) : LIVE_QUERIES)
+    : [];
+  list.innerHTML = '';
+
+  data.forEach((q, i) => {
+    const snippet  = q.failed ? '' : q.response.slice(0, 80) + (q.response.length > 80 ? '…' : '');
+    const row = document.createElement('div');
+    row.className = 'query-row';
+    row.dataset.idx = i;
+    row.innerHTML = `
+      <div class="query-row-main">
+        <span class="query-time">${q.time}</span>
+        <span class="query-student">${q.student}</span>
+        <span class="query-text">${escHtml(q.text)}</span>
+        <span class="topic-tag-badge">${q.topic}</span>
+        ${q.failed ? '<span class="failed-badge">FAILED</span>' : ''}
+      </div>
+      ${!q.failed ? `
+      <div class="query-row-detail" style="display:none;">
+        <div class="query-response">
+          <span class="query-detail-label">response:</span>
+          <span class="query-response-text">${escHtml(q.response)}</span>
+        </div>
+        <div class="query-sources">
+          <span class="query-detail-label">sources:</span>
+          <span class="query-source-tag">${q.sources}</span>
+        </div>
+      </div>` : `
+      <div class="query-row-detail query-row-detail-failed" style="display:none;">
+        <div class="query-response">System could not find a relevant answer in course materials.</div>
+      </div>`}
+      ${!q.failed ? `<div class="query-expand-hint">▸ click to expand response</div>` : `<div class="query-expand-hint query-expand-hint-failed">▸ click to view failure details</div>`}
+    `;
+    row.addEventListener('click', () => toggleQueryRow(row));
+    list.appendChild(row);
+  });
+
+  // blinking cursor at end
+  const cursor = document.createElement('div');
+  cursor.className = 'query-list-cursor';
+  cursor.textContent = '•';
+  list.appendChild(cursor);
+}
+
+function toggleQueryRow(row) {
+  const detail = row.querySelector('.query-row-detail');
+  const hint   = row.querySelector('.query-expand-hint');
+  const open   = detail.style.display !== 'none';
+  detail.style.display = open ? 'none' : 'block';
+  hint.textContent = open ? '▸ click to expand response' : '▾ collapse';
+  row.classList.toggle('query-row-open', !open);
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── Heatmap topic click → filter queries ─────────────────────── */
+let activeTopic = null;
+
+document.querySelectorAll('.heatmap-row').forEach(row => {
+  row.addEventListener('click', () => {
+    const topic = row.dataset.topic;
+    if (activeTopic === topic) {
+      clearFilter();
+      return;
+    }
+    activeTopic = topic;
+    document.querySelectorAll('.heatmap-row').forEach(r => r.classList.remove('heatmap-row-active'));
+    row.classList.add('heatmap-row-active');
+    document.getElementById('queryHeaderText').textContent = `queries :: ${topic}`;
+    document.getElementById('clearFilterBtn').style.display = 'inline-flex';
+    document.getElementById('queryBlock').scrollIntoView({ behavior:'smooth', block:'start' });
+    renderQueries(topic);
+  });
+});
+
+document.getElementById('clearFilterBtn').addEventListener('click', clearFilter);
+
+function clearFilter() {
+  activeTopic = null;
+  document.querySelectorAll('.heatmap-row').forEach(r => r.classList.remove('heatmap-row-active'));
+  document.getElementById('queryHeaderText').textContent = 'Recent queries';
+  document.getElementById('clearFilterBtn').style.display = 'none';
+  renderQueries(null);
+}
+
+/* ── Initial render ───────────────────────────────────────────── */
+(async function init() {
+  // Get course ID from URL
+  const courseId = window.location.pathname.split('/instructor/analytics/')[1] || '';
+  
+  // Update back link
+  document.getElementById('backLink').href = '/instructor/course/' + courseId;
+  
+  // Load course details
+  if (courseId) {
+    try {
+      const courseRes = await fetch(`/course/${courseId}`);
+      if (courseRes.ok) {
+        const course = await courseRes.json();
+        document.getElementById('analyticsCourseCode').textContent = course.code || courseId;
+      }
+      
+      // Get teacher name
+      const authRes = await fetch('/auth/me');
+      if (authRes.ok) {
+        const authData = await authRes.json();
+        if (authData.user) {
+          document.getElementById('teacherNameDisplay').textContent = authData.user.full_name || 'Teacher';
+        }
+      }
+    } catch (e) {
+      console.error('Error loading course details:', e);
+    }
+  }
+  
+  // Show loading states
+  document.getElementById('queryHeaderText').textContent = 'Recent queries — loading...';
+  
+  // Fetch live data from API
+  await Promise.all([fetchAnalytics(), fetchQueries()]);
+  
+  // Final render
+  document.getElementById('queryHeaderText').textContent = 'Recent queries';
+})();
+</script>
+
+<!-- Logout Handler -->
+<script>
+  document.querySelectorAll('a[href="#"]').forEach(link => {
+    if (link.textContent.toLowerCase().includes('log out') || link.textContent.toLowerCase().includes('logout')) {
+      link.addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+          const res = await fetch('/auth/logout', { method: 'POST' });
+          const data = await res.json();
+          if (data.success) {
+            window.location.href = data.redirect || '/login';
+          }
+        } catch (err) {
+          console.error('Logout failed:', err);
+        }
+      });
+    }
+  });
+</script>
+</body>
+</html>

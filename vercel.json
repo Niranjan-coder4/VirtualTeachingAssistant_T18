@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "vta-frontend",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "https://vta-flask-backend.fly.dev/$1"
+    }
+  ]
+}

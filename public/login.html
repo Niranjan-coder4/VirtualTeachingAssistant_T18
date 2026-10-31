@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VTA · Sign in</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-container">
+
+            <!-- Brand -->
+            <div class="auth-brand">
+                <div class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                        <path d="M6 12v5c0 1.1 2.7 2.5 6 2.5s6-1.4 6-2.5v-5"/>
+                    </svg>
+                </div>
+                <h1>Welcome back</h1>
+                <p>Sign in to continue your AI-powered learning journey</p>
+            </div>
+
+            <!-- Card -->
+            <div class="auth-card">
+
+                <!-- ═══════════════════════════════════════════════════
+                     SIGN IN PANEL
+                     ═══════════════════════════════════════════════════ -->
+                <div class="auth-panel active" id="panelSignin">
+                    <form id="signinForm" onsubmit="handleSignin(event)">
+                        <div class="input-group">
+                            <label class="input-label" for="signinEmail">Email</label>
+                            <div class="input-shell">
+                                <span class="field-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                        <path d="m22 7-10 6L2 7"/>
+                                    </svg>
+                                </span>
+                                <input
+                                    type="email"
+                                    id="signinEmail"
+                                    placeholder="you@university.edu"
+                                    required
+                                    autocomplete="email"
+                                    spellcheck="false"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label" for="signinPassword">Password</label>
+                            <div class="input-shell">
+                                <span class="field-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                </span>
+                                <input
+                                    type="password"
+                                    id="signinPassword"
+                                    placeholder="••••••••"
+                                    required
+                                    autocomplete="current-password"
+                                >
+                                <button type="button" class="toggle-pw" id="toggleSigninPw" aria-label="Show password">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/>
+                                        <circle cx="12" cy="12" r="3"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg btn-block auth-submit" id="signinBtn">
+                            Sign In
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14M13 6l6 6-6 6"/>
+                            </svg>
+                        </button>
+                    </form>
+
+                    <div class="auth-status" id="signinStatus"></div>
+
+                    <div class="auth-footer">
+                        <p>New to VTA? <a href="#" onclick="switchTab('signup'); return false;">Create account</a></p>
+                    </div>
+                </div>
+
+                <!-- ═══════════════════════════════════════════════════
+                     SIGN UP PANEL
+                     ═══════════════════════════════════════════════════ -->
+                <div class="auth-panel" id="panelSignup">
+                    <form id="signupForm" onsubmit="handleSignup(event)">
+                        <div class="input-group">
+                            <label class="input-label" for="signupName">Full name</label>
+                            <div class="input-shell">
+                                <span class="field-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                </span>
+                                <input
+                                    type="text"
+                                    id="signupName"
+                                    placeholder="Jordan Smith"
+                                    required
+                                    autocomplete="name"
+                                    spellcheck="false"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label" for="signupEmail">Email</label>
+                            <div class="input-shell">
+                                <span class="field-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="2" y="4" width="20" height="16" rx="2"/>
+                                        <path d="m22 7-10 6L2 7"/>
+                                    </svg>
+                                </span>
+                                <input
+                                    type="email"
+                                    id="signupEmail"
+                                    placeholder="you@university.edu"
+                                    required
+                                    autocomplete="email"
+                                    spellcheck="false"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label" for="signupPassword">Password</label>
+                            <div class="input-shell">
+                                <span class="field-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                </span>
+                                <input
+                                    type="password"
+                                    id="signupPassword"
+                                    placeholder="at least 6 characters"
+                                    required
+                                    minlength="6"
+                                    autocomplete="new-password"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label" for="signupConfirm">Confirm password</label>
+                            <div class="input-shell">
+                                <span class="field-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                </span>
+                                <input
+                                    type="password"
+                                    id="signupConfirm"
+                                    placeholder="••••••••"
+                                    required
+                                    minlength="6"
+                                    autocomplete="new-password"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="role-group">
+                            <label class="input-label">I am a</label>
+                            <div class="role-options">
+                                <label class="role-option">
+                                    <input type="radio" name="role" value="student" checked>
+                                    <span class="role-icon" aria-hidden="true">🎓</span>
+                                    <span>Student</span>
+                                </label>
+                                <label class="role-option">
+                                    <input type="radio" name="role" value="teacher">
+                                    <span class="role-icon" aria-hidden="true">👨‍🏫</span>
+                                    <span>Teacher</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg btn-block auth-submit" id="signupBtn">
+                            Create account
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M5 12h14M13 6l6 6-6 6"/>
+                            </svg>
+                        </button>
+                    </form>
+
+                    <div class="auth-status" id="signupStatus"></div>
+
+                    <div class="auth-footer">
+                        <p>Already have an account? <a href="#" onclick="switchTab('signin'); return false;">Sign in</a></p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="auth-back">
+                <a class="back-link" href="/">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m15 18-6-6 6-6"/>
+                    </svg>
+                    Back to home
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // ── Tab Switching ─────────────────────────────────────────
+        function switchTab(tab) {
+            const panelSignin = document.getElementById('panelSignin');
+            const panelSignup = document.getElementById('panelSignup');
+            const brandTitle = document.querySelector('.auth-brand h1');
+            const brandSubtitle = document.querySelector('.auth-brand p');
+
+            // Clear any status messages
+            clearStatus('signinStatus');
+            clearStatus('signupStatus');
+
+            if (tab === 'signin') {
+                panelSignin.classList.add('active');
+                panelSignup.classList.remove('active');
+                brandTitle.textContent = 'Welcome back';
+                brandSubtitle.textContent = 'Sign in to continue your AI-powered learning journey';
+            } else {
+                panelSignup.classList.add('active');
+                panelSignin.classList.remove('active');
+                brandTitle.textContent = 'Create your account';
+                brandSubtitle.textContent = 'Join VTA and start learning with your AI assistant';
+            }
+        }
+
+        // ── Status Helpers ────────────────────────────────────────
+        function showStatus(elementId, type, message) {
+            const el = document.getElementById(elementId);
+            el.className = 'auth-status ' + type;
+            const prefix = type === 'error' ? '✗' : type === 'success' ? '✓' : '→';
+            el.innerHTML = `<span class="status-prefix">${prefix}</span> ${message}`;
+        }
+
+        function clearStatus(elementId) {
+            const el = document.getElementById(elementId);
+            el.className = 'auth-status';
+            el.innerHTML = '';
+        }
+
+        // ── Password visibility toggles ───────────────────────────
+        function wirePasswordToggle(buttonId, inputId) {
+            const button = document.getElementById(buttonId);
+            const input = document.getElementById(inputId);
+            if (!button || !input) return;
+
+            button.addEventListener('click', () => {
+                const revealing = input.type === 'password';
+                input.type = revealing ? 'text' : 'password';
+                button.setAttribute('aria-label', revealing ? 'Hide password' : 'Show password');
+                button.innerHTML = revealing
+                    ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/><path d="m4 4 16 16"/></svg>'
+                    : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>';
+            });
+        }
+
+        wirePasswordToggle('toggleSigninPw', 'signinPassword');
+
+        // ── Sign In Handler ───────────────────────────────────────
+        async function handleSignin(event) {
+            event.preventDefault();
+
+            const btn = document.getElementById('signinBtn');
+            const email = document.getElementById('signinEmail').value.trim();
+            const password = document.getElementById('signinPassword').value;
+
+            if (!email || !password) {
+                showStatus('signinStatus', 'error', 'email and password are required');
+                return;
+            }
+
+            // Show loading state
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> signing in...';
+            showStatus('signinStatus', 'loading', 'authenticating...');
+
+            try {
+                const res = await fetch('/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password }),
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showStatus('signinStatus', 'success', `welcome back, ${data.user.full_name || data.user.email}`);
+                    // Redirect based on role (teacher -> dashboard, student -> home)
+                    const redirectUrl = data.redirect || (data.user.role === 'teacher' ? '/instructor/dashboard' : '/student/home');
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 600);
+                } else {
+                    showStatus('signinStatus', 'error', data.error || 'login failed');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Sign In <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+                }
+            } catch (err) {
+                showStatus('signinStatus', 'error', 'connection failed. is the server running?');
+                btn.disabled = false;
+                btn.innerHTML = 'Sign In <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+            }
+        }
+
+        // ── Sign Up Handler ───────────────────────────────────────
+        async function handleSignup(event) {
+            event.preventDefault();
+
+            const btn = document.getElementById('signupBtn');
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value;
+            const confirm = document.getElementById('signupConfirm').value;
+            const role = document.querySelector('input[name="role"]:checked').value;
+
+            // Validate
+            if (!name || !email || !password) {
+                showStatus('signupStatus', 'error', 'all fields are required');
+                return;
+            }
+
+            if (password.length < 6) {
+                showStatus('signupStatus', 'error', 'password must be at least 6 characters');
+                return;
+            }
+
+            if (password !== confirm) {
+                showStatus('signupStatus', 'error', 'passwords do not match');
+                return;
+            }
+
+            // Show loading state
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> creating account...';
+            showStatus('signupStatus', 'loading', 'registering...');
+
+            try {
+                const res = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        full_name: name,
+                        email: email,
+                        password: password,
+                        role: role,
+                    }),
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    showStatus('signupStatus', 'success', 'account created. redirecting...');
+                    // After registration, login and redirect based on role
+                    const redirectUrl = data.user.role === 'teacher' ? '/instructor/dashboard' : '/student/home';
+                    setTimeout(() => {
+                        window.location.href = redirectUrl;
+                    }, 600);
+                } else {
+                    showStatus('signupStatus', 'error', data.error || 'registration failed');
+                    btn.disabled = false;
+                    btn.innerHTML = 'Create account <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+                }
+            } catch (err) {
+                showStatus('signupStatus', 'error', 'connection failed. is the server running?');
+                btn.disabled = false;
+                btn.innerHTML = 'Create account <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+            }
+        }
+
+        // ── Auto-check if already logged in ───────────────────────
+        (async function checkSession() {
+            try {
+                const res = await fetch('/auth/me');
+                if (res.ok) {
+                    // Already logged in, redirect to main app
+                    window.location.href = '/';
+                }
+            } catch (e) {
+                // Not logged in, stay on login page
+            }
+        })();
+    </script>
+</body>
+</html>

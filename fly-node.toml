@@ -1,0 +1,20 @@
+app = "vta-node-backend"
+primary_region = "sea"
+
+[build]
+  dockerfile = "Dockerfile.node"
+
+[env]
+  PORT = "10000"
+
+[http_service]
+  internal_port = 10000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1
