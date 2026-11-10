@@ -1,10 +1,10 @@
 {
   "version": 2,
-  "name": "vta-frontend",
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "https://vta-flask-backend.fly.dev/$1"
-    }
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://vta-cluster.tail999a12.ts.net/api/$1" },
+    { "source": "/drive/(.*)", "destination": "https://vta-cluster.tail999a12.ts.net/drive/$1" },
+    {"source": "/uploads/(.*)", "destination": "https://vta-cluster.tail999a12.ts.net/uploads/$1"},
+    {"source": "/media/(.*)", "destination": "https://vta-cluster.tail999a12.ts.net/media/$1"},
+    {"source": "/pdf/(.*)", "destination": "https://vta-cluster.tail999a12.ts.net/pdf/$1"}
   ]
 }
